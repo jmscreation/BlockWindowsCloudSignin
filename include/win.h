@@ -7,8 +7,11 @@
 
 #include <string>
 #include <iostream>
+#include <filesystem>
 #include <array>
 #include <cassert>
+
+namespace fs = std::filesystem;
 
 class WinAPI {
 public:
@@ -36,13 +39,13 @@ public:
     struct WinAPI_ACL {
         PACL acl;
         
-        bool loadACL(const std::string& filePath);
-        bool saveACL(const std::string& filePath) const;
+        bool loadACL(const fs::path& filePath);
+        bool saveACL(const fs::path& filePath) const;
 
         bool modifyACL(WinAPI_SID sid, EXPLICIT_ACCESS ex_access); // update the new ACL with new permissions - overwrites the acl except for the origin acl
         
-        bool loadACLFromObject(const std::string& filePath); // load the origin acl from an object
-        bool applyACLToObject(const std::string& filePath); // apply the current ACL on an object
+        bool loadACLFromObject(const fs::path& filePath); // load the origin acl from an object
+        bool applyACLToObject(const fs::path& filePath); // apply the current ACL on an object
 
         WinAPI_ACL(): acl(NULL) {}
         ~WinAPI_ACL() {
@@ -57,8 +60,8 @@ public:
 
     bool EnablePrivilege(LPCSTR privilegeName);
 
-    bool TakeOwnership(const std::string& filePath, WinAPI_SID sid);
-    WinAPI_SID GetOwnership(const std::string& filePath);
+    bool TakeOwnership(const fs::path& filePath, WinAPI_SID sid);
+    WinAPI_SID GetOwnership(const fs::path& filePath);
 
     bool IsElevated();
 

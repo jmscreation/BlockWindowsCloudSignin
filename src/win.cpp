@@ -69,7 +69,9 @@ bool WinAPI::WinAPI_ACL::modifyACL(WinAPI_SID sid, EXPLICIT_ACCESS ex_access) {
 
     // folders:
         // ea.grfInheritance = SUB_CONTAINERS_AND_OBJECTS_INHERIT;
-    ea.grfInheritance = NO_INHERITANCE;
+    // files:
+        // ea.grfInheritance = NO_INHERITANCE;
+
     ea.Trustee.TrusteeForm = TRUSTEE_IS_SID;
     ea.Trustee.TrusteeType = (TRUSTEE_TYPE)sid.type;
     ea.Trustee.ptstrName = (LPSTR)sid.sid;
@@ -86,12 +88,12 @@ bool WinAPI::WinAPI_ACL::modifyACL(WinAPI_SID sid, EXPLICIT_ACCESS ex_access) {
     return false;
 }
 
-bool WinAPI::WinAPI_ACL::loadACLFromObject(const std::string& filePath) {
+bool WinAPI::WinAPI_ACL::loadACLFromObject(const fs::path& filePath) {
     bool success = false;
     PSECURITY_DESCRIPTOR pSD = NULL;
     PACL _oldACL;
     // Get current DACL
-    if(GetNamedSecurityInfo(filePath.c_str(), SE_FILE_OBJECT, DACL_SECURITY_INFORMATION, NULL, NULL, &_oldACL, NULL, &pSD) == ERROR_SUCCESS){
+    if(GetNamedSecurityInfoW( (LPWSTR)filePath.c_str(), SE_FILE_OBJECT, DACL_SECURITY_INFORMATION, NULL, NULL, &_oldACL, NULL, &pSD) == ERROR_SUCCESS){
         success = SetEntriesInAcl(0, NULL, _oldACL, &acl) == ERROR_SUCCESS;
     }
 
@@ -99,12 +101,12 @@ bool WinAPI::WinAPI_ACL::loadACLFromObject(const std::string& filePath) {
     return success;
 }
 
-bool WinAPI::WinAPI_ACL::applyACLToObject(const std::string& filePath) {
+bool WinAPI::WinAPI_ACL::applyACLToObject(const fs::path& filePath) {
     // Apply new DACL
-    return SetNamedSecurityInfo( (LPSTR)filePath.c_str(), SE_FILE_OBJECT, DACL_SECURITY_INFORMATION, NULL, NULL, acl, NULL) == ERROR_SUCCESS;
+    return SetNamedSecurityInfoW( (LPWSTR)filePath.c_str(), SE_FILE_OBJECT, DACL_SECURITY_INFORMATION, NULL, NULL, acl, NULL) == ERROR_SUCCESS;
 }
 
-bool WinAPI::WinAPI_ACL::saveACL(const std::string& filePath) const {
+bool WinAPI::WinAPI_ACL::saveACL(const fs::path& filePath) const {
     ACL_SIZE_INFORMATION aclSize;
     if(!GetAclInformation(acl, &aclSize, sizeof(aclSize), AclSizeInformation)){
         std::cout << "Invalid ACL\n";
@@ -123,7 +125,7 @@ bool WinAPI::WinAPI_ACL::saveACL(const std::string& filePath) const {
     return file.tellp() == aclSize.AclBytesInUse;
 }
 
-bool WinAPI::WinAPI_ACL::loadACL(const std::string& filePath) {
+bool WinAPI::WinAPI_ACL::loadACL(const fs::path& filePath) {
     
     std::streamsize length;
     std::ifstream file(filePath, std::ios::in | std::ios::binary | std::ios::ate);
@@ -232,13 +234,13 @@ bool WinAPI::EnablePrivilege(LPCSTR privilegeName) {
     return success && GetLastError() == ERROR_SUCCESS;
 }
 
-bool WinAPI::TakeOwnership(const std::string& filePath, WinAPI_SID sid) {
+bool WinAPI::TakeOwnership(const fs::path& filePath, WinAPI_SID sid) {
     PSID User = sid.type == SidTypeUser ? sid.sid : NULL, Group = (sid.type == SidTypeGroup || sid.type == SidTypeAlias) ? sid.sid : NULL;
 
     return SetNamedSecurityInfo((LPSTR)filePath.c_str(), SE_FILE_OBJECT, OWNER_SECURITY_INFORMATION, User, Group, NULL, NULL);
 }
 
-WinAPI::WinAPI_SID WinAPI::GetOwnership(const std::string& filePath) {
+WinAPI::WinAPI_SID WinAPI::GetOwnership(const fs::path& filePath) {
     WinAPI_SID rSid(true);
     PSECURITY_DESCRIPTOR pSD = NULL;
     PSID _sid = NULL;
