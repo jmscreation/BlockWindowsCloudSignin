@@ -12,20 +12,20 @@ To restore everything back to normal, simply re-run the program and press Y for 
 ## The following sign in apps will be blocked:
 
 ### Access work or school
-<img src="https://github.com/jmscreation/WWAHost_Disable/blob/main/github/sc1.png" />
+<img src="https://github.com/jmscreation/BlockWindowsCloudSignin/blob/main/github/sc1.png" />
 
 ### Sign in with a Microsoft account
-<img src="https://github.com/jmscreation/WWAHost_Disable/blob/main/github/sc2.png" />
+<img src="https://github.com/jmscreation/BlockWindowsCloudSignin/blob/main/github/sc2.png" />
 
 ### Email and accounts
 #### Add an account
 #### Add a work or school account
 Block all email sign in!<br/>
-<img src="https://github.com/jmscreation/WWAHost_Disable/blob/main/github/sc3.png" />
+<img src="https://github.com/jmscreation/BlockWindowsCloudSignin/blob/main/github/sc3.png" />
 
 ### Family & other users
 #### Sign in with a Microsoft account
 #### Add someone else to this PC*
-<img src="https://github.com/jmscreation/WWAHost_Disable/blob/main/github/sc4.png" />
+<img src="https://github.com/jmscreation/BlockWindowsCloudSignin/blob/main/github/sc4.png" />
 
 _*This is part of the CloudExperienceHost package, and cannot be avoided_
