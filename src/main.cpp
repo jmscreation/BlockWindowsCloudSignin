@@ -12,7 +12,7 @@
 static WinAPI windows;
 
 void timeout(){
-    std::this_thread::sleep_for(std::chrono::seconds(3));
+    std::this_thread::sleep_for(std::chrono::seconds(2));
 }
 
 bool yes_or_no(){
