@@ -11,7 +11,7 @@ set CPP=c++
 set GPP=g++
 set GCC=gcc
 set WINDRES=windres
-set OUTPUT=program.exe
+set OUTPUT=DisableWinCloud.exe
 set DEBUGMODE=0
 set COMMANDLINE=1
 
